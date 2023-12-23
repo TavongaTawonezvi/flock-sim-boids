@@ -5,24 +5,30 @@ class Boid {
 
         // set position to random point on canvas
         this.position = createVector(random(width), random(height));
+        this.strokeColor = color(random(255), random(255), random(255));
 
         // randomize velocity intensity and max value
         this.velocity = p5.Vector.random2D();
-        this.velocity.setMag(random(0.75, 1.75));
-        this.maxVelocity = 4;
+        this.velocity.setMag(random(0, 1));
+        this.maxVelocity = 2;
 
         // set acceleration and max value
         this.acceleration = createVector();
-        this.maxAcceleration = 1;
+        this.maxAcceleration = 0.3;
+
+        this.separationRadius = 20; // radius of boid perception for separation 
+        this.alignmentRadius = 40; // radius of boid perception for alignment
+        this.cohesionRadius = 50; // radius of boid perception for separation 
+
     }
 
     // represent Boid as point on canvas
     show() {
 
         // set diameter of point
-        strokeWeight(10);
+        strokeWeight(7);
         // set color of point
-        stroke(75, 235, 255);
+        stroke(this.strokeColor);
         // print point in current position
         point(this.position.x, this.position.y);
 
@@ -39,20 +45,20 @@ class Boid {
     // stop Boids from going over the canvas
     edges() {
     
-        if(this.position.x < 0){ this.position.x = 0; }
-        else if(this.position.x > width){ this.position.x = width; }
+        if(this.position.x < 0){ this.position.x = width; }
+        else if(this.position.x > width){ this.position.x = 0; }
 
-        if(this.position.y < 0){ this.position.y = 0; }
-        else if(this.position.y > height){ this.position.y = height; }
+        if(this.position.y < 0){ this.position.y = height; }
+        else if(this.position.y > height){ this.position.y = 0; }
 
     }
 
     // Boid Behavior Logic
 
+
     // seperation: return an avoidance force vector of all boids
     separate(boids) {
 
-        let perceptionRadius = 50; // radius of boid perception
         let totalBoids = 0; // number of boids in perception radius
         let avoidance = createVector(); // avoidance vector
 
@@ -67,7 +73,7 @@ class Boid {
                 boid.position.y
             );
 
-            if(d<perceptionRadius && boid != this ) {
+            if(d<this.separationRadius && boid != this ) {
                 
                 //calculate vector pointing away from boid to this boid
                 let diff = p5.Vector.sub( this.position, boid.position );
@@ -96,7 +102,6 @@ class Boid {
     // Alignment: align boids' velocity vector with nearby particles to make them move in the same direction
     align(boids) {
 
-        let perceptionRadius = 50; 
         let totalBoids = 0; 
         let alignForce = createVector(); // alignment vector
 
@@ -109,7 +114,7 @@ class Boid {
                 boid.position.y
             );
 
-            if(d<perceptionRadius && boid != this ) {
+            if(d<this.alginmentRadius && boid != this ) {
                 
                 // calculate total velocity of each boid in perc radius
                 alignForce.add(boid.velocity);
@@ -121,8 +126,8 @@ class Boid {
         if (totalBoids > 0) {
             alignForce.div(totalBoids); // normalize total alignment vector
             alignForce.setMag(this.maxVelocity); // makes sure Boid does not deccelerate
-            alignForce.sub(this.velocity)
-            alignForce.limit(this.maxAcceleration) // limit to maxAcceleration
+            alignForce.sub(this.velocity);
+            alignForce.limit(this.maxAcceleration);// limit to maxAcceleration
             }
 
         return alignForce;
@@ -132,7 +137,6 @@ class Boid {
     // 
     cohesion(boids) {
 
-        let perceptionRadius = 50; 
         let totalBoids = 0; 
         let steeringForce = createVector(); // alignment vector
 
@@ -145,7 +149,7 @@ class Boid {
                 boid.position.y
             );
 
-            if(d<perceptionRadius && boid != this ) {
+            if(d<this.cohesionRadius && boid != this ) {
                 
                 // calculate total steering force of each boid in perc radius
                 steeringForce.add(boid.velocity);
@@ -156,10 +160,10 @@ class Boid {
 
         if (totalBoids > 0) {
             steeringForce.div(totalBoids); // normalize total steering force vector
-            steeringForce.sub(this.position)
+            steeringForce.sub(this.position);
             steeringForce.setMag(this.maxVelocity); // makes sure Boid does not deccelerate
-            steeringForce.sub(this.velocity)
-            steeringForce.limit(this.maxAcceleration) // limit to maxAcceleration
+            steeringForce.sub(this.velocity);
+            steeringForce.limit(this.maxAcceleration); // limit to maxAcceleration
             }
 
         return steeringForce;
@@ -167,6 +171,19 @@ class Boid {
     }
 
     flock(boids) {
-        
+
+        this.acceleration.set(0, 0) // reset boid acceleration in each frame
+
+        // get force vectors returned
+        let avoidance = this.separate(boids);
+        let alignment = this.align(boids);
+        let cohesion = this.cohesion(boids);
+
+        // add to acceleration force
+        // there's no mass in the system so Force = Acceleration
+        this.acceleration.add(avoidance);
+        this.acceleration.add(alignment);
+        this.acceleration.add(cohesion);
+
     }
 }
