@@ -5,7 +5,6 @@ class Boid {
 
         // set position to random point on canvas
         this.position = createVector(random(width), random(height));
-        this.strokeColor = color(random(255), random(255), random(255));
 
         // randomize velocity intensity and max value
         this.velocity = p5.Vector.random2D();
@@ -14,11 +13,7 @@ class Boid {
 
         // set acceleration and max value
         this.acceleration = createVector();
-        this.maxAcceleration = 0.3;
-
-        this.separationRadius = 10; // radius of boid perception for separation 
-        this.alignmentRadius = 20; // radius of boid perception for alignment
-        this.cohesionRadius = 20; // radius of boid perception for separation 
+        this.maxAcceleration = 0.3; 
 
     }
 
@@ -26,9 +21,9 @@ class Boid {
     show() {
 
         // set diameter of point
-        strokeWeight(7);
+        strokeWeight(9);
         // set color of point
-        stroke(this.strokeColor);
+        stroke(color(77, 121, 255));
         // print point in current position
         point(this.position.x, this.position.y);
 
@@ -67,6 +62,7 @@ class Boid {
 
         let totalBoids = 0; // number of boids in perception radius
         let avoidance = createVector(); // avoidance vector
+        let perceptionRadius = document.getElementById('separate').value;
 
         // loop through every boid and check if each falls in perc radius of this
         boids.forEach(boid => {
@@ -79,7 +75,7 @@ class Boid {
                 boid.position.y
             );
 
-            if(d<this.separationRadius && boid != this ) {
+            if(d<perceptionRadius && boid != this ) {
                 
                 //calculate vector pointing away from boid to this boid
                 let diff = p5.Vector.sub( this.position, boid.position );
@@ -110,6 +106,7 @@ class Boid {
 
         let totalBoids = 0; 
         let alignForce = createVector(); // alignment vector
+        let perceptionRadius = document.getElementById('align').value;
 
         boids.forEach(boid => {
             
@@ -120,7 +117,7 @@ class Boid {
                 boid.position.y
             );
 
-            if(d<this.alginmentRadius && boid != this ) {
+            if(d<perceptionRadius && boid != this ) {
                 
                 // calculate total velocity of each boid in perc radius
                 alignForce.add(boid.velocity);
@@ -145,6 +142,7 @@ class Boid {
 
         let totalBoids = 0; 
         let steeringForce = createVector(); // alignment vector
+        let perceptionRadius = document.getElementById('cohesion').value;
 
         boids.forEach(boid => {
             
@@ -155,7 +153,7 @@ class Boid {
                 boid.position.y
             );
 
-            if(d<this.cohesionRadius && boid != this ) {
+            if(d<perceptionRadius && boid != this ) {
                 
                 // calculate total steering force of each boid in perc radius
                 steeringForce.add(boid.velocity);

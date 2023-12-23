@@ -1,8 +1,25 @@
 html, body {
   margin: 0;
   padding: 0;
+  background: rgb(46, 46, 46);
+  color: white;
 }
 
 canvas {
   display: block;
 }
+
+.sliders {
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ padding: 2rem;
+}
+.slider {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 0 5rem 0 5rem;
+}
+

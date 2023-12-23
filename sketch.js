@@ -1,5 +1,5 @@
 function setup() {
-  createCanvas(1000, 800);
+  createCanvas(window.innerWidth, 600);
 
   // loop over to populate array with Boids
   for(let i=0; i<maxBoids; i++) {
@@ -8,7 +8,11 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(color(51, 51, 51));
+
+  document.querySelector('.p5Canvas').addEventListener('mousedown', e => frameRate(40)) // slow down on mouse-down to better visualise sim
+  document.querySelector('.p5Canvas').addEventListener('mouseup', e => frameRate(60))
+
 
   // call show() on each Boid in the simulation.
   flock.forEach(boid => {
