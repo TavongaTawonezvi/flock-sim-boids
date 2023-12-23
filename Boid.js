@@ -69,34 +69,104 @@ class Boid {
 
             if(d<perceptionRadius && boid != this ) {
                 
-                //calculate AVARAGE avoidance vector: inverse of dist vector between two boids
-                let diff = p5.Vector.sub(
-                    this.position,
-                    boid.position
-                );
+                //calculate vector pointing away from boid to this boid
+                let diff = p5.Vector.sub( this.position, boid.position );
 
+                // normalize seperation vector
                 diff.div(d);
                 // add inverse vector to avoidance vector
                 avoidance.add(diff);
-
+            
                 totalBoids++;
 
             }
         });
 
         if (totalBoids > 0) {
-            avoidance.div(totalBoids);
-            avoidance.setMag(this.maxVelocity);
+            avoidance.div(totalBoids); // normalize total avoidance vector
+            avoidance.setMag(this.maxVelocity); // limit to maxVelocity
             avoidance.sub(this.velocity)
-            avoidance.limit(this.maxAcceleration)
-        }
+            avoidance.limit(this.maxAcceleration) // limit to maxAcceleration
+            }
 
         return avoidance;
 
     }
 
-    // Alignment: align boids' velocity vector with other particles to make them move in the same direction
+    // Alignment: align boids' velocity vector with nearby particles to make them move in the same direction
     align(boids) {
 
+        let perceptionRadius = 50; 
+        let totalBoids = 0; 
+        let alignForce = createVector(); // alignment vector
+
+        boids.forEach(boid => {
+            
+            let d = dist(
+                this.position.x, 
+                this.position.y, 
+                boid.position.x, 
+                boid.position.y
+            );
+
+            if(d<perceptionRadius && boid != this ) {
+                
+                // calculate total velocity of each boid in perc radius
+                alignForce.add(boid.velocity);
+                totalBoids++;
+
+            }
+        });
+
+        if (totalBoids > 0) {
+            alignForce.div(totalBoids); // normalize total alignment vector
+            alignForce.setMag(this.maxVelocity); // makes sure Boid does not deccelerate
+            alignForce.sub(this.velocity)
+            alignForce.limit(this.maxAcceleration) // limit to maxAcceleration
+            }
+
+        return alignForce;
+
+    }
+
+    // 
+    cohesion(boids) {
+
+        let perceptionRadius = 50; 
+        let totalBoids = 0; 
+        let steeringForce = createVector(); // alignment vector
+
+        boids.forEach(boid => {
+            
+            let d = dist(
+                this.position.x, 
+                this.position.y, 
+                boid.position.x, 
+                boid.position.y
+            );
+
+            if(d<perceptionRadius && boid != this ) {
+                
+                // calculate total steering force of each boid in perc radius
+                steeringForce.add(boid.velocity);
+                totalBoids++;
+
+            }
+        });
+
+        if (totalBoids > 0) {
+            steeringForce.div(totalBoids); // normalize total steering force vector
+            steeringForce.sub(this.position)
+            steeringForce.setMag(this.maxVelocity); // makes sure Boid does not deccelerate
+            steeringForce.sub(this.velocity)
+            steeringForce.limit(this.maxAcceleration) // limit to maxAcceleration
+            }
+
+        return steeringForce;
+
+    }
+
+    flock(boids) {
+        
     }
 }

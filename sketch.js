@@ -12,9 +12,9 @@ function draw() {
 
   // call show() on each Boid in the simulation.
   flock.forEach(boid => {
-    boid.edges();
-    boid.update();
-    boid.show();
+    boid.edges(); // keep Boid within bounds of the canvas
+    boid.update(); // update Boid position
+    boid.show(); // display each Boid
   })
 }
 
