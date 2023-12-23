@@ -1,5 +1,5 @@
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(1000, 800);
 
   // loop over to populate array with Boids
   for(let i=0; i<maxBoids; i++) {

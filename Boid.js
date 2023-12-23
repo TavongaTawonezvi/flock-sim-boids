@@ -9,16 +9,16 @@ class Boid {
 
         // randomize velocity intensity and max value
         this.velocity = p5.Vector.random2D();
-        this.velocity.setMag(random(0, 1));
-        this.maxVelocity = 2;
+        this.velocity.setMag(random(0.75, 1.75))
+        this.maxVelocity = 4;
 
         // set acceleration and max value
         this.acceleration = createVector();
         this.maxAcceleration = 0.3;
 
-        this.separationRadius = 20; // radius of boid perception for separation 
-        this.alignmentRadius = 40; // radius of boid perception for alignment
-        this.cohesionRadius = 50; // radius of boid perception for separation 
+        this.separationRadius = 10; // radius of boid perception for separation 
+        this.alignmentRadius = 20; // radius of boid perception for alignment
+        this.cohesionRadius = 20; // radius of boid perception for separation 
 
     }
 
@@ -42,14 +42,20 @@ class Boid {
         this.velocity.limit(this.maxVelocity) // limit the velocity to max value
     }
 
-    // stop Boids from going over the canvas
+    // loop the frame
     edges() {
     
-        if(this.position.x < 0){ this.position.x = width; }
-        else if(this.position.x > width){ this.position.x = 0; }
+        if (this.position.x > width) {
+            this.position.x = 0
+        } else if (this.position.x < 0) {
+            this.position.x = width
+        }
 
-        if(this.position.y < 0){ this.position.y = height; }
-        else if(this.position.y > height){ this.position.y = 0; }
+        if (this.position.y > height) {
+            this.position.y = 0
+        } else if (this.position.y < 0) {
+            this.position.y = height
+        }
 
     }
 
