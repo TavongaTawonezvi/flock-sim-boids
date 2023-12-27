@@ -21,7 +21,7 @@ class Boid {
     show() {
 
         // set diameter of point
-        strokeWeight(9);
+        strokeWeight(11);
         // set color of point
         stroke(color(77, 121, 255));
         // print point in current position
