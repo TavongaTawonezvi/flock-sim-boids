@@ -1,5 +1,5 @@
 # Flock Simulation
-### This project is a take on Boids Algorithm, an artificial llife program that simulates the flocking behavior of birds, and related motion. This implementation is built using p5.js.
+### This project is a take on Boids Algorithm, an artificial life program that simulates the flocking behavior of birds, and related motion. This implementation is built using p5.js.
 <p align="center">
   <img src="https://github.com/TavongaTawonezvi/flock-sim-boids/assets/67804599/76ff0e8f-68f0-4574-bc86-cbfb688312a0" style="width: 850px; height: 400px;">
 </p>
